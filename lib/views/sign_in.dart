@@ -22,7 +22,6 @@ class _SignInPageState extends State<SignInPage> {
   bool isProtectedPassword = false;
   @override
   void initState() {
-    Provider.of<SignInNotifier>(context, listen: false).resetScreen();
     super.initState();
   }
 
@@ -122,10 +121,27 @@ class _SignInPageState extends State<SignInPage> {
     String name = nameController.text.trim();
     String email = emailController.text.trim();
     String password = passwordController.text.trim();
-    // String address = addressController.text.trim();
-    // String salary = salaryController.text.trim();
-    Map<String, dynamic> form = {"name": name, "email": email, "password": password};
-    Provider.of<SignInNotifier>(context, listen: false).signUp(form);
+    String confirmPassword = confirmPasswordController.text.trim();
+    if (password != confirmPassword) {
+      Toaster.showToast(message: "Passwords doesn't match,please try again");
+      Future.delayed(Duration(milliseconds: 1000), () {
+        Toaster.showToast(message: "Your details have been submitted, Please sign in to view your data");
+        emailController.text = "";
+        nameController.text = "";
+        passwordController.text = "";
+        confirmPasswordController.text = "";
+      });
+    } else {
+      Map<String, dynamic> form = {"name": name, "email": email, "password": password};
+      Provider.of<SignInNotifier>(context, listen: false).signUp(form);
+      Future.delayed(Duration(milliseconds: 1000), () {
+        Toaster.showToast(message: "Your details have been submitted, Please sign in to view your data");
+        emailController.text = "";
+        nameController.text = "";
+        passwordController.text = "";
+        confirmPasswordController.text = "";
+      });
+    }
   }
 
   _getSignUpContainer() {
